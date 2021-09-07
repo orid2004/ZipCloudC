@@ -1,0 +1,7 @@
+.idea/*
+client/cmake*
+client/CMake*
+client/build/*
+server/cmake*
+server/CMake*
+server/build/*
