@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zecure/client/build
+CMAKE_SOURCE_DIR = /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zipcloudc/client/build
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zecure/client
+CMAKE_BINARY_DIR = /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zipcloudc/client
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,9 +80,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zecure/client/CMakeFiles /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zecure/client/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zipcloudc/client/CMakeFiles /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zipcloudc/client/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zecure/client/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /mnt/c/Users/Ori/Documents/MEGA/cloud/Programming/code/c/zipcloudc/client/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

@@ -32,7 +32,7 @@ int splitv(char buff[], const char str[], const char delim[], int index);
 void logProgress(size_t i);
 unsigned long hash64(const unsigned char *str);
 int loadId(const char id[]);
-void saveId();
+void saveId(char uname[], char passwd[]);
 void deleteId();
 void absPath(char buff[], int len, const char input[]);
 void pathToDirName(char buff[], const char path[]);
@@ -41,6 +41,7 @@ size_t sendChunk(SSL *ssl, char buff[], size_t len);
 void sendDir(SSL *ssl, char path[], const char id[]);
 void downloadDir(SSL *ssl, const char name[], const char outdir[], const char id[]);
 int hasDir(SSL *ssl, char name[], const char id[]);
+void resolvePath(char path[]);
 int handleUploadRequest(SSL *ssl, char *argv[], const char id[]);
 void getUploadResponse(SSL *ssl, char buff[], size_t size);
 void tree(SSL *ssl, const char id[]);
@@ -53,7 +54,8 @@ int main(int argc, char *argv[]) {
     char id[256];
     createDirs(MKDIR_STR);
     if (getuid() != 0) exitm(NOT_ROOT); // require root user
-    else if (argc == 2 && strcmp(argv[1], "auth") == 0) saveId(); // collect and save login information
+    else if (argc == 2 && strcmp(argv[1], "auth") == 0) saveId("", ""); // collect and save login information
+    else if (argc == 4 && strcmp(argv[1], "auth") == 0) saveId(argv[2], argv[3]); // collect and save login information from shell
     else if (argc == 2 && strcmp(argv[1], "deauth") == 0) deleteId(); // delete last saved login information
     else if (argc < 2 || argc > 4) printf("Usage: %s <option> <optional values>\n", argv[0]);
     else {
@@ -134,15 +136,21 @@ int loadId(const char id[]) {
     return -1;
 }
 
-void saveId() {
+void saveId(char uname[], char passwd[]) {
     /*Implementation of the 'auth' option
     save new login information*/
     char id[256], id_path[1024], tmp[128];
     snprintf(id_path, sizeof(id_path), "%s/%s", ID_DIR, ID_FNAME); // set id file path
-    printf("Save login information locally:\nUsername: ");
-    scanf("%s", id); getchar(); // collect a username
-    printf("Password: ");
-    scanf("%s", tmp); getchar(); // collect a password
+    if (strcmp(uname, "") == 0) {
+        printf("Save login information locally:\nUsername: ");
+        scanf("%s", id); getchar(); // collect a username
+        printf("Password: ");
+        scanf("%s", tmp); getchar(); // collect a password
+    }
+    else {
+        strcpy(id, uname);
+        strcpy(tmp, passwd);
+    }
     // Form an id structure
     strcat(id, "\r\n");
     strcat(id, tmp);
@@ -300,12 +308,33 @@ int hasDir(SSL *ssl, char name[], const char id[]) {
     return strcmp(response, ACCESS_OK) == 0;
 }
 
+void resolvePath(char path[]) {
+    printf("Unresolved path is [%s]\n", path);
+    if (fork() == 0) { if (execl(RESOLVE, RESOLVE, path, NULL) == FAIL) exitm(RESOLVE_FAIL); }
+    else wait(NULL);
+    path[0] = '\0';
+    FILE *fp = fopen(RESOLVE_OUTPUT, "r");
+    if (fp != NULL) {
+        size_t newLen = fread(path, sizeof(char), 1024, fp);
+        if ( ferror( fp ) != 0 ) {
+            fputs("Error reading file", stderr);
+        } else {
+            path[newLen++] = '\0'; /* Just to be safe. */
+        }
+
+        fclose(fp);
+    }
+    remove(RESOLVE_OUTPUT);
+    printf("Resolved path is [%s]\n", path);
+}
+
 int handleUploadRequest(SSL *ssl, char *argv[], const char id[]) {
     /*In: ssl, arg vector, id struct
     Handle the input of an upload request*/
     char path[1024], dir_name[256];
     if (argv[2][0] != '/') absPath(path, sizeof(path), argv[2]); // convert to absolute path
     else strcpy(path, argv[2]);
+    resolvePath(path);
     if (!isDir(path)) {
         printf("Folder not found\n"); // invalid path
         return -1;

@@ -26,3 +26,6 @@
 #define LISTENING "10"
 // Walk script
 #define WALK "walk"
+// Resolve script
+#define RESOLVE "resolve"
+#define RESOLVE_OUTPUT "tmp"

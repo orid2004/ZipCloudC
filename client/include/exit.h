@@ -6,7 +6,8 @@ typedef enum exit_code {
     CONNECT_ERR,
     WALK_FAIL,
     CONFIG_ERR,
-    META_ERR
+    META_ERR,
+    RESOLVE_FAIL
 } exit_code;
 
 void exitm(exit_code e);

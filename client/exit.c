@@ -22,7 +22,8 @@ const char EXIT_STRINGS[][SLEN] = {
     "Failed to connect",
     "Failed to execute the 'walk' script",
     "Failed to read login information",
-    "An error occurred while reading or writing meta"
+    "An error occurred while reading or writing meta",
+    "Failed to execute the 'resolve' script",
 };
 
 /*In: buffer, exit code
