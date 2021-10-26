@@ -223,7 +223,7 @@ rm -f Tetris/path/to/file
 ## Performance
 `Upload`
 
-Size | 25 Mb | 250 Mb | 1000 Mb
+Size | 25 Mb | 256 Mb | 1024 Mb
 --- | --- | --- | ---
 Files | 843 | 6013 | 17137
 Time | 3.26s | 34.16s | 224.34s
